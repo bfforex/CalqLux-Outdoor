@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CalqLux Outdoor - Professional Lighting Design</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Header and Navigation -->
+        <header class="header">
+            <div class="header-left">
+                <h1 class="logo">CalqLux Outdoor</h1>
+                <nav class="main-nav">
+                    <button class="nav-btn" data-action="new-project">New</button>
+                    <button class="nav-btn" data-action="open-project">Open</button>
+                    <button class="nav-btn" data-action="save-project">Save</button>
+                    <button class="nav-btn" data-action="export-report">Export</button>
+                </nav>
+            </div>
+            <div class="header-right">
+                <div class="view-controls">
+                    <button class="view-btn active" data-view="2d">2D</button>
+                    <button class="view-btn" data-view="3d">3D</button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Left Sidebar - Tools and Fixtures -->
+            <aside class="sidebar left-sidebar">
+                <div class="sidebar-section">
+                    <h3>Drawing Tools</h3>
+                    <div class="tool-group">
+                        <button class="tool-btn active" data-tool="select" title="Select">
+                            <span class="tool-icon">⚊</span>
+                        </button>
+                        <button class="tool-btn" data-tool="area" title="Draw Area">
+                            <span class="tool-icon">▢</span>
+                        </button>
+                        <button class="tool-btn" data-tool="fixture" title="Place Fixture">
+                            <span class="tool-icon">💡</span>
+                        </button>
+                        <button class="tool-btn" data-tool="obstacle" title="Place Obstacle">
+                            <span class="tool-icon">🏗</span>
+                        </button>
+                        <button class="tool-btn" data-tool="measure" title="Measure">
+                            <span class="tool-icon">📏</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Fixture Library</h3>
+                    <div class="fixture-categories">
+                        <button class="category-btn active" data-category="sports">Sports</button>
+                        <button class="category-btn" data-category="industrial">Industrial</button>
+                        <button class="category-btn" data-category="custom">Custom</button>
+                    </div>
+                    <div class="fixture-list" id="fixture-list">
+                        <!-- Fixtures will be populated by JavaScript -->
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Layers</h3>
+                    <div class="layer-list">
+                        <div class="layer-item active">
+                            <input type="checkbox" checked id="layer-fixtures">
+                            <label for="layer-fixtures">Fixtures</label>
+                        </div>
+                        <div class="layer-item active">
+                            <input type="checkbox" checked id="layer-areas">
+                            <label for="layer-areas">Areas</label>
+                        </div>
+                        <div class="layer-item active">
+                            <input type="checkbox" checked id="layer-obstacles">
+                            <label for="layer-obstacles">Obstacles</label>
+                        </div>
+                        <div class="layer-item active">
+                            <input type="checkbox" checked id="layer-grid">
+                            <label for="layer-grid">Grid</label>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
+            <!-- Canvas Area -->
+            <main class="canvas-container">
+                <div class="canvas-toolbar">
+                    <div class="zoom-controls">
+                        <button class="zoom-btn" data-action="zoom-in">+</button>
+                        <span class="zoom-level">100%</span>
+                        <button class="zoom-btn" data-action="zoom-out">-</button>
+                        <button class="zoom-btn" data-action="zoom-fit">Fit</button>
+                    </div>
+                    <div class="grid-controls">
+                        <label>
+                            Grid: <input type="number" id="grid-size" value="1" min="0.1" step="0.1"> m
+                        </label>
+                        <button class="grid-btn" data-action="toggle-snap">Snap</button>
+                    </div>
+                </div>
+                
+                <div class="canvas-wrapper">
+                    <canvas id="main-canvas" width="1200" height="800"></canvas>
+                    <canvas id="overlay-canvas" width="1200" height="800"></canvas>
+                </div>
+
+                <div class="status-bar">
+                    <span id="cursor-position">X: 0.00m, Y: 0.00m</span>
+                    <span id="selection-info"></span>
+                </div>
+            </main>
+
+            <!-- Right Sidebar - Properties and Results -->
+            <aside class="sidebar right-sidebar">
+                <div class="sidebar-section">
+                    <h3>Properties</h3>
+                    <div id="properties-panel" class="properties-panel">
+                        <p class="no-selection">Select an object to view properties</p>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Lighting Standards</h3>
+                    <div class="standards-panel">
+                        <select id="lighting-standard">
+                            <option value="fifa">FIFA Football Standards</option>
+                            <option value="uefa">UEFA Standards</option>
+                            <option value="ies">IES Industrial Standards</option>
+                            <option value="custom">Custom Requirements</option>
+                        </select>
+                        <div class="standard-requirements" id="standard-requirements">
+                            <!-- Requirements will be populated by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Calculation Results</h3>
+                    <div class="results-panel" id="results-panel">
+                        <div class="result-item">
+                            <label>Average Illuminance:</label>
+                            <span id="avg-illuminance">-- lux</span>
+                        </div>
+                        <div class="result-item">
+                            <label>Min Illuminance:</label>
+                            <span id="min-illuminance">-- lux</span>
+                        </div>
+                        <div class="result-item">
+                            <label>Max Illuminance:</label>
+                            <span id="max-illuminance">-- lux</span>
+                        </div>
+                        <div class="result-item">
+                            <label>Uniformity Ratio:</label>
+                            <span id="uniformity-ratio">-- : 1</span>
+                        </div>
+                        <div class="result-item">
+                            <label>Compliance:</label>
+                            <span id="compliance-status" class="status-unknown">Not Calculated</span>
+                        </div>
+                        <button class="calculate-btn" id="calculate-btn">Calculate Lighting</button>
+                    </div>
+                </div>
+
+                <div class="sidebar-section">
+                    <h3>Visualization</h3>
+                    <div class="visualization-controls">
+                        <button class="viz-btn" data-viz="isolux">Iso-lux Contours</button>
+                        <button class="viz-btn" data-viz="3d-intensity">3D Light Distribution</button>
+                        <button class="viz-btn" data-viz="glare">Glare Analysis</button>
+                        <button class="viz-btn" data-viz="spillage">Light Spillage</button>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </div>
+
+    <!-- Modals -->
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <h2>Project Management</h2>
+            <div class="project-actions">
+                <input type="file" id="project-file-input" accept=".json" style="display: none;">
+                <button onclick="document.getElementById('project-file-input').click()">Load Project</button>
+                <button id="download-project">Download Project</button>
+            </div>
+            <button class="modal-close">&times;</button>
+        </div>
+    </div>
+
+    <div id="export-modal" class="modal">
+        <div class="modal-content">
+            <h2>Export Report</h2>
+            <div class="export-options">
+                <label><input type="checkbox" checked> Lighting Analysis</label>
+                <label><input type="checkbox" checked> Equipment List</label>
+                <label><input type="checkbox"> 3D Visualization</label>
+                <label><input type="checkbox"> Iso-lux Plots</label>
+            </div>
+            <button id="generate-report">Generate PDF Report</button>
+            <button class="modal-close">&times;</button>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script src="js/utils.js"></script>
+    <script src="js/fixture-library.js"></script>
+    <script src="js/lighting-calculator.js"></script>
+    <script src="js/canvas-manager.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
